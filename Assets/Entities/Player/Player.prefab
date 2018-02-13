@@ -117,6 +117,10 @@ MonoBehaviour:
   padding: 1
   fireSound: {fileID: 8300000, guid: 102678d665c3a884b980fcc2d3e5b228, type: 3}
   deathSound: {fileID: 8300000, guid: 1bf852c4415571a46982a6497e025998, type: 3}
+  shieldUp: {fileID: 8300000, guid: 1f05e3a023572694a8b483728dfd69fa, type: 3}
+  shieldDown: {fileID: 8300000, guid: 339246c02cd055248b291324e8932b87, type: 3}
+  speedBoostOn: {fileID: 8300000, guid: e39992d93b364454fbf8550378b176f8, type: 3}
+  speedBoostOff: {fileID: 8300000, guid: 1b367deea858b1e468a27b001fa047df, type: 3}
 --- !u!212 &212963558989814596
 SpriteRenderer:
   m_ObjectHideFlags: 1

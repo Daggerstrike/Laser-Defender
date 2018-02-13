@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 	public GameObject laserPrefab;
 	public int laserSpeed = 10;
 	private float health = 200f;
-	public float fireRate = 0.2f;
+	public float fireRate = 1f;
 	public float speed = 10.0f; 
 	float globalTime = 0f;
 
@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
 
 	public AudioClip fireSound;
 	public AudioClip deathSound;
+	public AudioClip shieldUp;
+	public AudioClip shieldDown;
+	public AudioClip speedBoostOn;
+	public AudioClip speedBoostOff;
 
 	private LifeCounter lifeCounter;
 
@@ -39,65 +43,82 @@ public class PlayerController : MonoBehaviour
 
 		// Laser was fired and collides with player
 		if(missile) {
-
 			// If shield is hit, negate the damage and destroy the missile
 			if(Powerup.GetShield()) {
-				Powerup.SetShield(false);
+				ShieldDown();
 				missile.Hit();
 			}
-
 			// Else take damage
 			else {
 				health -= missile.GetDamage();
 				missile.Hit();
-				if (health <= 0) {
-					ResetHealth();
-					Die();
-				}
+				HealthCheck();
 			}
 		}
 
 		// Meteor collides with player
 		if(meteor) {
-
 			// If shield is hit, negate the damage and destroy the meteor
 			if(Powerup.GetShield()) {
-				Powerup.SetShield(false);
+				ShieldDown();
 				meteor.Hit();
 			}
-
 			// Else take damage
 			else {
 				health -= meteor.GetDamage();
 				meteor.Hit();
-				if(health <= 0) {
-					ResetHealth();
-					Die();
-				}
+				HealthCheck();
 			}
 		}
 
 		// If player collects a shield powerup
-		if(powerup && collider.gameObject.name.Contains("shieldPowerup")) {
-			Powerup.SetShield(true);
-			powerup.Collected();
-		}
+		if(powerup && collider.gameObject.name.Contains("shieldPowerup"))
+			ShieldUp(powerup);
 
-		// If player collects a speed powerup, double speed of ship and fire rate
-		if(powerup && collider.gameObject.name.Contains("speedPowerup")) {
-			// Player cannot stack speed boosts
-			if(Powerup.GetSpeedBoost() != true) {
-				Powerup.SetSpeedBoost(true);
-				globalTime = Time.time;
-				speed *= 2;
-				fireRate /= 2;
-			}
-			powerup.Collected();
+		// If player collects a speed powerup
+		if(powerup && collider.gameObject.name.Contains("speedPowerup"))
+			SpeedBoostOn(powerup);
+	}
+
+	void HealthCheck() {
+		if(health <= 0) {
+			ResetHealth();
+			Die();
 		}
 	}
 
 	void ResetHealth() {
 		health = 200f;
+	}
+
+	void ShieldUp(Powerup powerup) {
+		Powerup.SetShield(true);
+		AudioSource.PlayClipAtPoint(shieldUp, transform.position);
+		powerup.Collected();
+	}
+
+	void ShieldDown() {
+		Powerup.SetShield(false);
+		AudioSource.PlayClipAtPoint(shieldDown, transform.position);
+	}
+
+	void SpeedBoostOn(Powerup powerup) {
+		// Player cannot stack speed boosts
+		if(Powerup.GetSpeedBoost() != true) {
+			Powerup.SetSpeedBoost(true);
+			globalTime = Time.time;
+			speed *= 2;
+			fireRate /= 2;
+			AudioSource.PlayClipAtPoint(speedBoostOn, transform.position);
+		}
+		powerup.Collected();
+	}
+
+	void SpeedBoostOff() {
+		Powerup.SetSpeedBoost(false);
+		speed /= 2;
+		fireRate *= 2;
+		AudioSource.PlayClipAtPoint(speedBoostOff, transform.position);
 	}
 
 	void Fire() {
@@ -139,9 +160,7 @@ public class PlayerController : MonoBehaviour
 
 		// If speed boost expired, set speed and fire rate back to normal
 		if (Powerup.GetSpeedBoost() && Time.time - globalTime >= 20f) {
-			Powerup.SetSpeedBoost(false);
-			speed /= 2;
-			fireRate *= 2;
+			SpeedBoostOff();
 		}
 	}
 }
