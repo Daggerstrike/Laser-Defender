@@ -20,7 +20,7 @@ public class FormationController : MonoBehaviour
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distanceToCamera));
 		xmax = rightBoundary.x;
 		xmin = leftBoundary.x;
-		SpawnEnemies();
+		SpawnUntilFull();
 	}
 
 	void Update () {
@@ -40,14 +40,6 @@ public class FormationController : MonoBehaviour
 
 		if(AllMembersDead()) {
 			SpawnUntilFull();
-		}
-	}
-
-	// Spawn enemies into the map
-	void SpawnEnemies() {
-		foreach (Transform child in transform) {
-			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
-			enemy.transform.parent = child;
 		}
 	}
 

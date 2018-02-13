@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1191465687654504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.01, y: -4.42, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -113,7 +113,6 @@ MonoBehaviour:
     type: 2}
   laserSpeed: 10
   fireRate: 0.2
-  health: 150
   speed: 5
   padding: 1
   fireSound: {fileID: 8300000, guid: 102678d665c3a884b980fcc2d3e5b228, type: 3}
@@ -150,7 +149,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 969837621
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a101cf642425aef4b835318848c6ac96, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

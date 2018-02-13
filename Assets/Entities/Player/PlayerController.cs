@@ -6,25 +6,98 @@ public class PlayerController : MonoBehaviour
 {
 	public GameObject laserPrefab;
 	public int laserSpeed = 10;
+	private float health = 200f;
 	public float fireRate = 0.2f;
-	public float health = 150f;
+	public float speed = 10.0f; 
+	float globalTime = 0f;
 
-	public float speed = 40.0f; 
 	public float padding = 1.0f;
-
 	float xmin;
 	float xmax;
 
 	public AudioClip fireSound;
 	public AudioClip deathSound;
 
-	void Start () {
+	private LifeCounter lifeCounter;
+
+	void Start() {
 		// Used to determine boundaries for the game space where the player can move
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftmost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance));
 		Vector3 rightmost = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance));
 		xmin = leftmost.x + padding;
 		xmax = rightmost.x - padding;
+
+		// Get LifeCounter so that we can inc/dec lives for certain events
+		lifeCounter = GameObject.Find("Lives").GetComponent<LifeCounter>();
+	}
+
+	void OnTriggerEnter2D(Collider2D collider) {
+		Laser missile = collider.gameObject.GetComponent<Laser>();
+		Meteor meteor = collider.gameObject.GetComponent<Meteor>();
+		Powerup powerup = collider.gameObject.GetComponent<Powerup>();
+
+		// Laser was fired and collides with player
+		if(missile) {
+
+			// If shield is hit, negate the damage and destroy the missile
+			if(Powerup.GetShield()) {
+				Powerup.SetShield(false);
+				missile.Hit();
+			}
+
+			// Else take damage
+			else {
+				health -= missile.GetDamage();
+				missile.Hit();
+				if (health <= 0) {
+					ResetHealth();
+					Die();
+				}
+			}
+		}
+
+		// Meteor collides with player
+		if(meteor) {
+
+			// If shield is hit, negate the damage and destroy the meteor
+			if(Powerup.GetShield()) {
+				Powerup.SetShield(false);
+				meteor.Hit();
+			}
+
+			// Else take damage
+			else {
+				health -= meteor.GetDamage();
+				meteor.Hit();
+				if(health <= 0) {
+					ResetHealth();
+					Die();
+				}
+			}
+		}
+
+		// If player collects a shield powerup
+		if(powerup && collider.gameObject.name.Contains("shieldPowerup")) {
+			Powerup.SetShield(true);
+			powerup.Collected();
+		}
+
+		// If player collects a speed powerup, double speed of ship and fire rate
+		if(powerup && collider.gameObject.name.Contains("speedPowerup")) {
+			// Player cannot stack speed boosts
+			if(Powerup.GetSpeedBoost() != true) {
+				Powerup.SetSpeedBoost(true);
+				globalTime = Time.time;
+				speed *= 2;
+				fireRate /= 2;
+			}
+			powerup.Collected();
+		}
+	}
+
+	void ResetHealth() {
+		health = 200f;
 	}
 
 	void Fire() {
@@ -34,15 +107,24 @@ public class PlayerController : MonoBehaviour
 		AudioSource.PlayClipAtPoint(fireSound, transform.position);
 	}
 
-	void Update () {
+	void Die() {
+		AudioSource.PlayClipAtPoint(deathSound, transform.position);
+		Powerup.SetSpeedBoost(false);
+		Powerup.SetShield(false);
+		lifeCounter.LoseLife();	// LoseLife handles the transitions and whatnot
+		Destroy(gameObject);	// Destroy the player GameObject
+	}
+
+	void Update() {
+		// Restrict player to game space
+		float newx = Mathf.Clamp(transform.position.x, xmin, xmax);
+		transform.position = new Vector3(newx, transform.position.y, transform.position.z);
+
+		// Move left and right
 		if(Input.GetKey(KeyCode.LeftArrow))
 			transform.position += Vector3.left * speed * Time.deltaTime;
 		else if(Input.GetKey(KeyCode.RightArrow))
 			transform.position += Vector3.right * speed * Time.deltaTime;
-
-		// Restrict player to game space
-		float newx = Mathf.Clamp(transform.position.x, xmin, xmax);
-		transform.position = new Vector3(newx, transform.position.y, transform.position.z);
 
 		// If space is held down, fire lasers at a set rate
 		// "Fire" refers to the method above via string
@@ -54,23 +136,12 @@ public class PlayerController : MonoBehaviour
 		if(Input.GetKeyUp(KeyCode.Space)) {
 			CancelInvoke("Fire");
 		}
-	}
 
-	void OnTriggerEnter2D(Collider2D collider) {
-		Laser missile = collider.gameObject.GetComponent<Laser>();
-
-		// Laser was fired and collides with player
-		if(missile) {
-			health -= missile.GetDamage();
-			missile.Hit();
-			if (health <= 0)
-				Die();
+		// If speed boost expired, set speed and fire rate back to normal
+		if (Powerup.GetSpeedBoost() && Time.time - globalTime >= 20f) {
+			Powerup.SetSpeedBoost(false);
+			speed /= 2;
+			fireRate *= 2;
 		}
-	}
-
-	void Die() {
-		AudioSource.PlayClipAtPoint(deathSound, transform.position);
-		Destroy(gameObject);
-		GameObject.Find("LevelManager").GetComponent<LevelManager>().LoadNextLevel();	
 	}
 }

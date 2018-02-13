@@ -17,7 +17,7 @@ TagManager:
   - Enemies
   - FriendlyLasers
   - EnemyLasers
-  - 
+  - Objects
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Objects
+    uniqueID: 2288738009
     locked: 0
   - name: EnemyLasers
     uniqueID: 1800857519
