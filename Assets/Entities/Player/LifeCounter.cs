@@ -15,6 +15,7 @@ public class LifeCounter : MonoBehaviour {
 		playerSpawn = GameObject.Find("PlayerSpawn").GetComponent<PlayerSpawn>();
 	}
 
+	// This is where death management is taken care of
 	public void LoseLife() {
 		lives -= 1;
 		myText.text = string.Format("Lives: {0}", lives.ToString());
@@ -26,6 +27,7 @@ public class LifeCounter : MonoBehaviour {
 		}
 	}
 
+	// Respawns a new player
 	IEnumerator RespawnPlayer() {
 		yield return new WaitForSeconds(2.0f);
 		playerSpawn.Respawn();
