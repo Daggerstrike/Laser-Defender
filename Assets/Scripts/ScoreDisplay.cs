@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Handles display of the score in text objects
 public class ScoreDisplay : MonoBehaviour {
-	public bool newHighScorePanel;
+	public bool newHighScorePanel;		// Set in inspector
 
 	void Start() {
 		if(newHighScorePanel)

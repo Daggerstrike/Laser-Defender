@@ -33,7 +33,7 @@ public class MusicPlayer : MonoBehaviour {
 	}
  
 	private void OnDisable () {
-    	SceneManager.sceneLoaded -= OnSceneLoaded;  //unsubscribe
+    	SceneManager.sceneLoaded -= OnSceneLoaded;  // unsubscribe
 	}
  
 	private void OnSceneLoaded (Scene level, LoadSceneMode loadSceneMode) {

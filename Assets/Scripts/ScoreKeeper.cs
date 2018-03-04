@@ -20,4 +20,9 @@ public class ScoreKeeper : MonoBehaviour {
 	public static void Reset() {
 		score = 0;
 	}
+
+	// Wrapper class to allow calls to Reset through GUI buttons
+	public void ResetWrapper() {
+		Reset();
+	}
 }

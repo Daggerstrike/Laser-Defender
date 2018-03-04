@@ -34,9 +34,6 @@ public class PlayerController : MonoBehaviour
 
 		// Get LifeCounter so that we can inc/dec lives for certain events
 		lifeCounter = GameObject.Find("Lives").GetComponent<LifeCounter>();
-
-		// Reset the ScoreKeeper
-		ScoreKeeper.Reset();
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {
