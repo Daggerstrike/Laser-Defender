@@ -6,11 +6,11 @@ using UnityEngine;
 public class EnemyBehavior : MonoBehaviour {
 
 	public GameObject laserPrefab;
-	public int laserSpeed = -10;	// Must be negative in order to make lasers fire downward
-	public float health = 200f;
-	public float shotsPerSecond = 0.5f;
+	private int laserSpeed = -10;	// Must be negative in order to make lasers fire downward
+	private float health = 200f;
+	private float shotsPerSecond = 0.5f;
 
-	public int pointValue = 100;
+	private int pointValue = 100;
 	private ScoreKeeper scoreKeeper;
 	private LifeCounter lifeCounter;
 

@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour 
 {
 	public GameObject laserPrefab;
+	public GameObject shieldPrefab;
+	private GameObject shieldImage;
+
 	public int laserSpeed = 10;
 	private float health = 200f;
 	public float fireRate = 1f;
@@ -92,12 +95,16 @@ public class PlayerController : MonoBehaviour
 	}
 
 	void ShieldUp(Powerup powerup) {
+		// Only display shield image if there isn't one active already (prevents duplicates)
+		if(!Powerup.GetShield())
+			shieldImage = Instantiate(shieldPrefab, transform.position, Quaternion.identity) as GameObject;
 		Powerup.SetShield(true);
 		AudioSource.PlayClipAtPoint(shieldUp, transform.position);
 		powerup.Collected();
 	}
 
 	void ShieldDown() {
+		Destroy(shieldImage);
 		Powerup.SetShield(false);
 		AudioSource.PlayClipAtPoint(shieldDown, transform.position);
 	}
@@ -162,5 +169,9 @@ public class PlayerController : MonoBehaviour
 		if (Powerup.GetSpeedBoost() && Time.time - globalTime >= 20f) {
 			SpeedBoostOff();
 		}
+
+		// Set position of shield to be the same as the player
+		if(Powerup.GetShield())
+			shieldImage.transform.position = transform.position;
 	}
 }

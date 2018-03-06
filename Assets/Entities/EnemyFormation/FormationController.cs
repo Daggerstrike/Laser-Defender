@@ -5,10 +5,12 @@ using UnityEngine;
 public class FormationController : MonoBehaviour 
 {
 	public GameObject enemyPrefab;
-	public float width = 10f;
-	public float height = 5f;
-	public float speed = 3f;
-	public float spawnDelay = 0.5f;
+	public GameObject enemyGhostPrefab;
+
+	private float width = 10f;
+	private float height = 5f;
+	private float speed = 5f;
+	private float spawnDelay = 0.5f;
 
 	private bool movingRight = false;
 	private float xmax;
@@ -43,20 +45,25 @@ public class FormationController : MonoBehaviour
 		}
 	}
 
+	// Spawn enemies one at a time
 	void SpawnUntilFull() {
 		Transform freePosition = NextFreePosition();
-		if(freePosition != null) {
+		if(freePosition) {
 			GameObject enemy = Instantiate(enemyPrefab, freePosition.position, Quaternion.identity) as GameObject;
 			enemy.transform.parent = freePosition;
+			GameObject enemyGhost = Instantiate(enemyGhostPrefab, freePosition.position, Quaternion.identity) as GameObject;
+			enemyGhost.transform.parent = freePosition;
 		}
-		if(NextFreePosition() != null)
+		if(NextFreePosition())
 			Invoke("SpawnUntilFull", spawnDelay);
+		else if(!NextFreePosition())
+			DestroyGhosts();
 	}
 
 	Transform NextFreePosition() {
-		foreach(Transform childPositionGameObject in transform) {
-			if(childPositionGameObject.childCount == 0)
-				return childPositionGameObject;
+		foreach(Transform child in transform) {
+			if(child.childCount == 0)
+				return child;
 		}
 		return null;
 	}
@@ -68,6 +75,15 @@ public class FormationController : MonoBehaviour
 				return false;
 		}
 		return true;
+	}
+
+	// Enemy ghosts are just empty GameObjects that indicate where an enemy will spawn
+	// This prevents players from spawning enemies in an endless loop
+	void DestroyGhosts() {
+		foreach(Transform child in transform)
+			foreach(Transform grandChild in child)
+				if(grandChild.name == "EnemyGhost(Clone)")
+					Destroy(grandChild.gameObject);
 	}
 
 	// Draws a box around the EnemyFormation in the editor

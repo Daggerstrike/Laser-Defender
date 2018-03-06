@@ -111,6 +111,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   laserPrefab: {fileID: 1389185593431980, guid: 8c64a89890c312f459fe29e1a38e1b97,
     type: 2}
+  shieldPrefab: {fileID: 1539432718204858, guid: 0ae3247ad49a0f2439bf75966227bcb5,
+    type: 2}
   laserSpeed: 10
   fireRate: 0.2
   speed: 5

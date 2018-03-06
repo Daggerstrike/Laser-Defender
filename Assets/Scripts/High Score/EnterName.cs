@@ -33,9 +33,15 @@ public class EnterName : MonoBehaviour {
 		}
 
 		if((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-			&& index < nameField.Length) {
+			&& index < nameField.Length - 1) {
 			index += 1;
-			alphaPosition = 1;
+			alphaPosition = CharToNumber(nameField[index]);
+		}
+
+		if((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+			&& index > 0) {
+			index -= 1;
+			alphaPosition = CharToNumber(nameField[index]);
 		}
 
 		for(int i=0; i<nameField.Length; i++)
@@ -59,5 +65,11 @@ public class EnterName : MonoBehaviour {
 		number += 64;	// Add 64 to get ASCII value of letter
 		char letter = (char)number;
 		return letter;
+	}
+
+	// Converts character to position in alphabet
+	private int CharToNumber(char letter) {
+		int index = char.ToUpper(letter) - 64;
+		return index;
 	}
 }

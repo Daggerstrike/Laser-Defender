@@ -1,2 +1,2 @@
 # Laser-Defender
-Old-fashioned space shooter developed with the Unity engine. This is a simple verison of the game. I am currently working on adding other features. 
+Retro space shooter developed with the Unity engine. The goal of the game is to blow up the enemy ships and achieve the highest score. Grab the power-ups to get a helpful boost, but watch out for the meteors!
