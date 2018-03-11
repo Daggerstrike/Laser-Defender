@@ -1,2 +1,5 @@
 # Laser-Defender
-Retro space shooter developed with the Unity engine. The goal of the game is to blow up the enemy ships and achieve the highest score. Grab the power-ups to get a helpful boost, but watch out for the meteors!
+If you want to try out the game, follow the instructions below:
+  1. Download the repository and unzip the folder. 
+  2. Grab the Build folder and move it to your desired location. 
+  3. Execute the "main.exe" file in the Build folder.
