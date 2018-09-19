@@ -1,5 +1,2 @@
 # Laser-Defender
-If you want to try out the game, follow the instructions below:
-  1. Download the repository and unzip the folder. 
-  2. Grab the Build folder and move it to your desired location. 
-  3. Execute the "main.exe" file in the Build folder.
+Basic game code was from Ben Tristem's Unity course on Udemy. I built a series of extra features on top of the base game to make it into a more enjoyable experience. 
